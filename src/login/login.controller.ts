@@ -6,8 +6,13 @@ import { AuthCredentialDto } from './dto/auth-credential.dto';
 export class LoginController {
   constructor(private readonly loginService: LoginService) {}
 
-  @Post('signup')
+  @Post('/signup')
   async signUp(@Body() authCredentialDto: AuthCredentialDto): Promise<void> {
     return this.loginService.signUp(authCredentialDto);
+  }
+
+  @Post('/login')
+  signIn(@Body() authCredentialDto: AuthCredentialDto) {
+    return this.loginService.logIn(authCredentialDto);
   }
 }
