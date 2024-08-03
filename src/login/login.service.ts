@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
@@ -15,15 +15,16 @@ export class LoginService {
     return this.userRepository.createUser(authCredentialDto);
   }
 
-  async logIn(authCredentialDto: AuthCredentialDto) {
+  async logIn(
+    authCredentialDto: AuthCredentialDto,
+  ): Promise<{ message: string }> {
     const { username, password } = authCredentialDto;
     const user = await this.userRepository.findOneBy({ username });
 
     if (user && (await compare(password, user.password))) {
-      const payload = { username };
       return { message: 'Login successful' };
+    } else {
+      throw new HttpException('Login failed', HttpStatus.UNAUTHORIZED);
     }
-
-    throw new Error('login failed');
   }
 }
