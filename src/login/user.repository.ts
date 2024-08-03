@@ -20,8 +20,6 @@ export class UserRepository extends Repository<User> {
       await this.save(user);
     } catch (error) {
       throw new ConflictException('Existing username');
-
-      console.log(error);
     }
   }
 }
