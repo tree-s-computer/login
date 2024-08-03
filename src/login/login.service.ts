@@ -15,12 +15,13 @@ export class LoginService {
     return this.userRepository.createUser(authCredentialDto);
   }
 
-  async logIn(authCredentialDto: AuthCredentialDto): Promise<void> {
+  async logIn(authCredentialDto: AuthCredentialDto) {
     const { username, password } = authCredentialDto;
     const user = await this.userRepository.findOneBy({ username });
 
     if (user && (await compare(password, user.password))) {
       const payload = { username };
+      return { message: 'Login successful' };
     }
 
     throw new Error('login failed');
