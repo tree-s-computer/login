@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
 import { compare } from 'bcrypt';
+import { User } from './user.entity';
+import { UserDto } from './dto/auth-credential.dto';
 
 @Injectable()
 export class LoginService {
@@ -11,7 +13,7 @@ export class LoginService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async signUp(authCredentialDto: AuthCredentialDto): Promise<void> {
+  async signUp(authCredentialDto: AuthCredentialDto): Promise<UserDto> {
     return this.userRepository.createUser(authCredentialDto);
   }
 
