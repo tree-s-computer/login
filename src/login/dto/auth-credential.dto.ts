@@ -1,4 +1,4 @@
 export class AuthCredentialDto {
-  username: string;
+  email: string;
   password: string;
 }

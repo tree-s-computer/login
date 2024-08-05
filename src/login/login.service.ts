@@ -18,8 +18,8 @@ export class LoginService {
   async logIn(
     authCredentialDto: AuthCredentialDto,
   ): Promise<{ message: string }> {
-    const { username, password } = authCredentialDto;
-    const user = await this.userRepository.findOneBy({ username });
+    const { email, password } = authCredentialDto;
+    const user = await this.userRepository.findOneBy({ email });
 
     if (user && (await compare(password, user.password))) {
       return { message: 'Login successful' };

@@ -11,10 +11,10 @@ export class UserRepository extends Repository<User> {
   }
 
   async createUser(authCredentialDto: AuthCredentialDto): Promise<void> {
-    const { username, password } = authCredentialDto;
+    const { email, password } = authCredentialDto;
     const salt = await genSalt();
     const hashedPassword = await hash(password, salt);
-    const user = this.create({ username, password: hashedPassword });
+    const user = this.create({ email, password: hashedPassword });
 
     try {
       await this.save(user);
