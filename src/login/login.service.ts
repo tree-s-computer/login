@@ -1,20 +1,31 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
+import { Repository } from 'typeorm';
 import { AuthCredentialDto } from './dto/auth-credential.dto';
-import { compare } from 'bcrypt';
 import { User } from './user.entity';
 import { UserDto } from './dto/auth-credential.dto';
-
+import { compare, hash, genSalt } from 'bcrypt';
 @Injectable()
 export class LoginService {
   constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepository,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async signUp(authCredentialDto: AuthCredentialDto): Promise<UserDto> {
-    return this.userRepository.createUser(authCredentialDto);
+    const { email, password } = authCredentialDto;
+
+    const user = new User();
+    user.email = email;
+
+    const salt = await genSalt();
+    user.password = await hash(password, salt);
+    const savedUser = await this.userRepository.save(user);
+
+    return {
+      id: savedUser.id,
+      email: savedUser.email,
+    };
   }
 
   async logIn(
